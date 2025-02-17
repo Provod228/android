@@ -6,26 +6,28 @@ import com.example.myapplication.domain.repositories.getUsersRepository
 import com.example.myapplication.domain.repositories.addUserRepository
 
 class getUsersRepositoryImpl: getUsersRepository, addUserRepository {
-    val listUsers = mutableListOf(
-        UserDto(1, "Harry", "Potter", 13),
-        UserDto(2, "Sirius", "Black", 33),
+    private val listUsers = mutableListOf(
+        UserDto(1, "Harry", "", 13),
+        UserDto(2, "Sirius", "", 33),
     )
 
-
-
     override suspend fun getUsers(): List<User> {
-
-        return listUsers.map{ dto ->
+        return listUsers.map { dto ->
             User(
                 name = dto.name,
-                surname = dto.surname,
-                age = dto.age
+                age = dto.age,
+                id = dto.id
             )
-
         }
     }
 
     override suspend fun addUser(user: User) {
-        listUsers.add(UserDto(id=3, name = user.name, surname = user.surname, age = user.age))
+        val newId = if (listUsers.isEmpty()) 1 else listUsers.maxOf { it.id } + 1
+        listUsers.add(UserDto(
+            id = newId,
+            name = user.name,
+            surname = "",
+            age = user.age
+        ))
     }
 }

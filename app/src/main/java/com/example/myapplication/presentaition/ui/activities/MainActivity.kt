@@ -54,11 +54,6 @@ class MainActivity : AppCompatActivity() {
             if (name.isNotEmpty() && age.isNotEmpty()) {
                 addUserViewModel.addUser(User(name = name, age = age.toInt(), id = 0))
             }
-            lifecycleScope.launchWhenResumed {
-                userViewModel.users.collect { users ->
-                    displayUsers(users)
-                }
-            }
         }
 
         binding.updateButtonId.setOnClickListener {
@@ -68,6 +63,12 @@ class MainActivity : AppCompatActivity() {
 
             if (id != null && name.isNotEmpty() && age != null) {
                 updateUserViewModel.updateUser(User(name = name, age = age, id = id))
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            userViewModel.users.collect { users ->
+                displayUsers(users)
             }
         }
     }
@@ -101,12 +102,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayUsers(users: List<User>){
+    private fun displayUsers(users: List<User>) {
         val sb = StringBuilder()
-        users.forEach{
-            user ->
-            sb.append("${user.name}\n")
-            Log.d("SecondTag",  user.toString())
+        users.forEach { user ->
+            sb.append("ID: ${user.id}, Имя: ${user.name}, Возраст: ${user.age}\n")
         }
         binding.surnameId.text = sb.toString()
     }

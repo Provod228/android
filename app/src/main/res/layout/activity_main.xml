@@ -6,56 +6,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     android:visibility="visible"
     tools:context=".presentaition.ui.activities.MainActivity">
 
     <EditText
-        android:id="@+id/edit_name_id"
+        android:id="@+id/editIdId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="type name: "
-        android:textSize="16sp"/>
+        android:hint="ID пользователя"
+        android:inputType="number" />
 
     <EditText
-        android:id="@+id/edit_surname_id"
+        android:id="@+id/editNameId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="type surname: "
-        android:textSize="16sp"/>
+        android:hint="Имя" />
 
     <EditText
-        android:id="@+id/edit_age_id"
+        android:id="@+id/editAgeId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="type age: "
-        android:textSize="16sp"/>
-
-
+        android:hint="Возраст"
+        android:inputType="number" />
 
     <Button
-        android:id="@+id/button_id"
+        android:id="@+id/buttonId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/get_users"
-        android:textSize="16sp" />
+        android:text="Добавить" />
+
+    <Button
+        android:id="@+id/updateButtonId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Обновить" />
 
     <TextView
-        android:id="@+id/surname_id"
+        android:id="@+id/surnameId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:cursorVisible="true"
-        android:text="my users"
-        android:textSize="24sp"
-        android:visibility="visible" />
-
-
-
-
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>
