@@ -13,16 +13,20 @@ import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.domain.models.User
 import com.example.myapplication.domain.usecases.AddUserUseCase
 import com.example.myapplication.domain.usecases.GetUsersUseCase
+import com.example.myapplication.domain.usecases.UpdateUserUseCase
 import com.example.myapplication.presentaition.ui.fragments.UserProfileFragment
 import com.example.myapplication.presentaition.viewmodelfactories.AddUserViewModelFactory
 import com.example.myapplication.presentaition.viewmodelfactories.UserViewModelFactory
+import com.example.myapplication.presentaition.viewmodelfactories.UpdateUserViewModelFactory
 import com.example.myapplication.presentaition.viewmodels.AddUserViewModel
 import com.example.myapplication.presentaition.viewmodels.UserViewModel
+import com.example.myapplication.presentaition.viewmodels.UpdateUserViewModel
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class MainActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
     private lateinit var addUserViewModel: AddUserViewModel
+    private lateinit var updateUserViewModel: UpdateUserViewModel
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +37,15 @@ class MainActivity : AppCompatActivity() {
         val userRepository = FakeUserRepository()
         val addUserUseCase = AddUserUseCase(userRepository)
         val getUsersUseCase = GetUsersUseCase(userRepository)
+        val updateUserUseCase = UpdateUserUseCase(userRepository)
+
         val viewModelFactory = UserViewModelFactory(getUsersUseCase)
         val addUserViewModelFactory = AddUserViewModelFactory(addUserUseCase)
+        val updateUserViewModelFactory = UpdateUserViewModelFactory(updateUserUseCase)
 
         userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
         addUserViewModel = ViewModelProvider(this, addUserViewModelFactory)[AddUserViewModel::class.java]
+        updateUserViewModel = ViewModelProvider(this, updateUserViewModelFactory)[UpdateUserViewModel::class.java]
 
         binding.buttonId.setOnClickListener {
             val name = binding.editNameId.text.toString()
@@ -50,6 +58,16 @@ class MainActivity : AppCompatActivity() {
                 userViewModel.users.collect { users ->
                     displayUsers(users)
                 }
+            }
+        }
+
+        binding.updateButtonId.setOnClickListener {
+            val id = binding.editIdId.text.toString().toIntOrNull()
+            val name = binding.editNameId.text.toString()
+            val age = binding.editAgeId.text.toString().toIntOrNull()
+
+            if (id != null && name.isNotEmpty() && age != null) {
+                updateUserViewModel.updateUser(User(name = name, age = age, id = id))
             }
         }
     }
