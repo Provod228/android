@@ -21,6 +21,7 @@ import com.example.myapplication.presentaition.viewmodelfactories.UpdateUserView
 import com.example.myapplication.presentaition.viewmodels.AddUserViewModel
 import com.example.myapplication.presentaition.viewmodels.UserViewModel
 import com.example.myapplication.presentaition.viewmodels.UpdateUserViewModel
+import kotlinx.coroutines.launch
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class MainActivity : AppCompatActivity() {
@@ -34,25 +35,33 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupViewModels()
+        setupClickListeners()
+        observeUsers()
+    }
+
+    private fun setupViewModels() {
         val userRepository = FakeUserRepository()
         val addUserUseCase = AddUserUseCase(userRepository)
         val getUsersUseCase = GetUsersUseCase(userRepository)
         val updateUserUseCase = UpdateUserUseCase(userRepository)
 
-        val viewModelFactory = UserViewModelFactory(getUsersUseCase)
-        val addUserViewModelFactory = AddUserViewModelFactory(addUserUseCase)
-        val updateUserViewModelFactory = UpdateUserViewModelFactory(updateUserUseCase)
+        userViewModel = ViewModelProvider(this, UserViewModelFactory(getUsersUseCase))[UserViewModel::class.java]
+        addUserViewModel = ViewModelProvider(this, AddUserViewModelFactory(addUserUseCase))[AddUserViewModel::class.java]
+        updateUserViewModel = ViewModelProvider(this, UpdateUserViewModelFactory(updateUserUseCase))[UpdateUserViewModel::class.java]
+    }
 
-        userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
-        addUserViewModel = ViewModelProvider(this, addUserViewModelFactory)[AddUserViewModel::class.java]
-        updateUserViewModel = ViewModelProvider(this, updateUserViewModelFactory)[UpdateUserViewModel::class.java]
-
+    private fun setupClickListeners() {
         binding.buttonId.setOnClickListener {
             val name = binding.editNameId.text.toString()
             val age = binding.editAgeId.text.toString()
 
             if (name.isNotEmpty() && age.isNotEmpty()) {
-                addUserViewModel.addUser(User(name = name, age = age.toInt(), id = 0))
+                lifecycleScope.launch {
+                    addUserViewModel.addUser(User(name = name, age = age.toInt(), id = 0))
+                    // После добавления обновляем список
+                    userViewModel.fetchUsers()
+                }
             }
         }
 
@@ -62,11 +71,17 @@ class MainActivity : AppCompatActivity() {
             val age = binding.editAgeId.text.toString().toIntOrNull()
 
             if (id != null && name.isNotEmpty() && age != null) {
-                updateUserViewModel.updateUser(User(name = name, age = age, id = id))
+                lifecycleScope.launch {
+                    updateUserViewModel.updateUser(User(name = name, age = age, id = id))
+                    // После обновления обновляем список
+                    userViewModel.fetchUsers()
+                }
             }
         }
+    }
 
-        lifecycleScope.launchWhenResumed {
+    private fun observeUsers() {
+        lifecycleScope.launchWhenStarted {
             userViewModel.users.collect { users ->
                 displayUsers(users)
             }

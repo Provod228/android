@@ -23,7 +23,7 @@ class UserViewModel(private val getUsersUseCase: GetUsersUseCase) : ViewModel() 
         fetchUsers()
     }
 
-    private fun fetchUsers() = viewModelScope.launch {
+    fun fetchUsers() = viewModelScope.launch {
         val result = getUsersUseCase()
         Log.d("Tag", result.toString())
         _users.value = result
