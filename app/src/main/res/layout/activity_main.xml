@@ -42,10 +42,23 @@
         android:layout_height="wrap_content"
         android:text="Обновить" />
 
-    <TextView
-        android:id="@+id/surnameId"
+    <EditText
+        android:id="@+id/editSurnameId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
+        android:hint="Фамилия" />
+
+    <Button
+        android:id="@+id/deleteButtonId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Удалить" />
+
+    <TextView
+        android:id="@+id/userListTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp" />
 
 </LinearLayout>

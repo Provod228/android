@@ -15,11 +15,6 @@ class UpdateUserViewModel(
     val updateStatus: StateFlow<Boolean?> = _updateStatus
 
     fun updateUser(user: User) = viewModelScope.launch {
-        try {
-            updateUserUseCase(user)
-            _updateStatus.value = true
-        } catch (e: Exception) {
-            _updateStatus.value = false
-        }
+        updateUserUseCase(user)
     }
 } 

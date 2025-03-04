@@ -15,6 +15,7 @@ class getUsersRepositoryImpl: getUsersRepository, addUserRepository {
         return listUsers.map { dto ->
             User(
                 name = dto.name,
+                surname = dto.surname,
                 age = dto.age,
                 id = dto.id
             )
@@ -26,7 +27,7 @@ class getUsersRepositoryImpl: getUsersRepository, addUserRepository {
         listUsers.add(UserDto(
             id = newId,
             name = user.name,
-            surname = "",
+            surname = user.surname,
             age = user.age
         ))
     }
